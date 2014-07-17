@@ -1,10 +1,6 @@
 require 'java'
 require 'rubygems'
 
-$CLASSPATH << "D:\sikuli"
-$JAVA_HOME = "C:\Program Files (x86)\Java\jre6" 
-# jar przeniesiony do katalogu z projektem zeby uniknac jebania sie z classpathem
-#
 require 'sikuli-script.jar'
 java_import 'org.sikuli.script.Region'
 java_import 'org.sikuli.script.Screen'
@@ -52,15 +48,10 @@ class SikuliAutomated
 		end			
 	end
 	
-	def d_click(location)
-	  #wrapper for cases when single clicks on screen are not recognized
-	  @screen.double_click(location)
-	end
 	def scroll_to_geo
-	#	while not @screen.exists("#{self.image_path}/geo.png") do
 	 @limiter = 0
-		while object_exists?("#{self.image_path}/geo.png", 0.85) != 1 && @limiter < 6 do           #BUG : finder lapie portret geologa w gornym lewym rogu na wiadomosci o wyslaniu; zaimplementowac find_in_region
-			puts 'no geo visible on screen, scrolling down .. '                #BUG : exists najwyrazniej nie odroznia wyszarzonego geo od zwyklego
+		while object_exists?("#{self.image_path}/geo.png", 0.85) != 1 && @limiter < 6 do           
+			puts 'no geo visible on screen, scrolling down .. '               
 			@screen.click(@screen.find("#{self.image_path}/b_scrollDown.png"))
 			sleep(1)
 			@limiter +=1
@@ -69,7 +60,7 @@ class SikuliAutomated
 	
 	 def scroll_to_baskets  #refactor
     while object_exists?("#{self.image_path}/basket.png", 0.8) != 1 do
-      puts 'no baskets visible on screen, scrolling down .. '                #BUG : exists najwyrazniej nie odroznia wyszarzonego geo od zwyklego
+      puts 'no baskets visible on screen, scrolling down .. '                
       @screen.click(@screen.find("#{self.image_path}/b_scrollDown.png"))
       sleep(0.5)
     end 
@@ -78,7 +69,7 @@ class SikuliAutomated
 	puts 'sending geo .. '
     @screen.click(geo)
 	puts 'choosing resource .. '
-    @screen.click(@screen.find("#{self.image_path}/r_#{resource}.png")) #konwencja nazewnicza dla obrazkow z zasobami
+    @screen.click(@screen.find("#{self.image_path}/r_#{resource}.png")) 
     @screen.click(@screen.find("#{self.image_path}/ok_button.png")) 
   end
     
@@ -86,8 +77,6 @@ class SikuliAutomated
     if @count > 0           
       send_geo_for(resource,geo)
       @count -= 1
-      #fixed problem z dekrementacja : pamietac o tym, ze argument jest interpretowany jako nowa zmienna lokalna z referencja do tego samego obiektu, ale niemogaca go mutowac; stad argument usuniety a licznik jest przekazywany jako zmienna instancji i referowana 
-      puts "cnt left : #{@count}"
       star_menu
     else 
       puts "no actions for geo #{geo}, maximum count of searches reached" 
@@ -100,7 +89,7 @@ class SikuliAutomated
     @sikuli.switch_app("Chrome")
     star_menu 
     if object_exists?("#{self.image_path}/geo.png", 0.8) != 1
-      @screen.click(@screen.find("#{self.image_path}/l_buffs.png"))  #convenience, na wypadek gdyby zakladka specow byla przescrollowana: wymyslec jakies inne obejscie.
+      @screen.click(@screen.find("#{self.image_path}/l_buffs.png"))  
       @screen.click(@screen.find("#{self.image_path}/l_specialisten.png"))
       scroll_to_geo
     end
@@ -112,14 +101,10 @@ class SikuliAutomated
     if @count > 0 
       puts "first row clean, scrolling to next one; left to send : #{@count}"
     end
-    #BUG FIXED : count sie dekrementuje, trzeba tylko uwazac zeby w kolejnych stepach referencowac zmienna instancjowa @count a nie label argumentu - count
     while @count > 0 
        puts "inside the while loop; count : #{@count}"
        region = @star_menu_region  
-       #tutaj moze sie przydac skonstruowanie wrappera do sanityzacji tego czy obiekt jest widoczny
-       @screen.click(region.find(Pattern.new("#{self.image_path}/b_scrollDown.png").similar(0.85)))  #FIX NEEDED : minimalne rozszerzenie regionu bo zdarzylo sie ze nie kliknelo scrolla; zamiast tego kliknelo jednego z wyslanych geo (chuj wie dlaczego bo quicktest nie pokazal bledow); ogolnie trzeba calosc rafeactorowac i porozbijac na zagniezdzone metody
-       #coordy w ktore kliknelo to 615:386 # fixed, to byl problem z similarity, znajdywalo wiecej obiektow wcale niepodobnych do patternu
-       # alternatywny hack : zlozyc okno czatu przed zaczeciem akcji
+       @screen.click(region.find(Pattern.new("#{self.image_path}/b_scrollDown.png").similar(0.85)))      
        @geo_next_row  = region.find_all(Pattern.new("#{self.image_path}/geo.png").similar(0.85))  
        @geo_next_row.each do |geo|
          puts "from inside geo next row; count : #{count}"
@@ -128,8 +113,7 @@ class SikuliAutomated
     end          
   end
 
-  def buff_building(coord)  #argument definition not yet specified
-    #dorobic drabinke logiczna zeby niepotrzebnie nie scrollowal
+  def buff_building(coord)  
     star_menu
     if object_exists?("#{self.image_path}/basket.png", 0.8) != 1 
       @screen.click(@screen.find("#{self.image_path}/l_specialisten.png"))  #soft reset okna, jesli nie widac na ekranie buffow to trudno stwierdzic czy scroll jest powyzej czy ponizej, wiec lepiej zresetowac
@@ -137,19 +121,22 @@ class SikuliAutomated
       scroll_to_baskets
     end
     @screen.click(@screen.find("#{self.image_path}/basket.png"))    #zalozenie, ze przy kilku koszykach w polu widzenia wybierze dowolny, a przy jednym - jedyny - wiec nie trzeba kombinowac z iterowaniem albo wybieraniem elementu z kolekcji 
-    d_click(coord)  
+    @screen.double_click(coord)  
     #check_for_cancel_button   # chyba pozostalosc po jakiejs innej metodzie albo blad przy kopiownaiu. 
      if object_exists?("#{self.image_path}/b_cancel.png") == 1
        @screen.click(@screen.find("#{self.image_path}/b_cancel.png"))
      end   
   end
   
-  def buff_building_group(coords)
-    @coord_group = coords
-    @coord_group.each do |coord|
-      sector = coord[0]
+  def buff_building_group(coords_file)
+    @unique_sector_numbers = []
+    CSV.foreach(coords_file) do |row|
+       @unique_sector_numbers << row[0]
+    end
+    @unique_sector_numbers.uniq!       
+    @unique_sector_numbers.each do |sector|   
       @sector_key = case sector
-        when 1 then Key.NUM1
+        when 1 then Key.NUM1         # zweryfikowac czy typy sa poprawne i nie dzieja sie cuda przy porownywaniu stringow i intow
         when 2 then Key.NUM2 
         when 3 then Key.NUM3
         when 4 then Key.NUM4
@@ -159,28 +146,32 @@ class SikuliAutomated
         when 8 then Key.NUM8       
         when 9 then Key.NUM9                       
       end 
-      @sikuli.type(@sector_key) 
-      sleep(0.5)
-      location = new Location(coord[1], coord[2])
-      buff_building(location)
+      @sikuli.type(@sector_key)   # jump to sector X
+      CSV.foreach(coords_file) do |row|      #buff only buildings in sector X
+        if row[0] == sector
+          sleep(0.5)
+          location = new Location(row[1], row[2])
+          buff_building(location)
+        end
+      end       
     end  
   end
   
   def scroll_to_explorer
     @limiter = 0
-    while object_exists?("#{self.image_path}/explorer.png") != 1 && @limiter < 7 do           #BUG : finder lapie portret geologa w gornym lewym rogu na wiadomosci o wyslaniu; zaimplementowac find_in_region
-      puts 'no geo visible on screen, scrolling down .. '                #BUG : exists najwyrazniej nie odroznia wyszarzonego geo od zwyklego
+    while object_exists?("#{self.image_path}/explorer.png") != 1 && @limiter < 7 do           
+      puts 'no geo visible on screen, scrolling down .. '                
       @screen.click(@screen.find("#{self.image_path}/b_scrollDown.png"))
       sleep(1)
       @limiter +=1
       puts @limiter
     end 
   end
-  def send_explorer_for_treasure(explorer, length)  #tutaj przetestowac czy wystarczy zalozenie, ze coordy sa zapisane w matcherze, i iterujac sie po matcherze nie bedziemy jeszcze raz wykonywac finda i lapac portretow w lewym gornym rogu; jesli nie to potencjalnie trzeba jeszcze raz instnacjonowac region i wykonywac finda w kazdej iteracji zeby bylo bezpiecznie
+  def send_explorer_for_treasure(explorer, length)  
     @screen.click(explorer)
-    @screen.click(@screen.find("#{self.image_path}/find_treasure.png")) #TODO : porownac ikonki poszczegolny
+    @screen.click(@screen.find("#{self.image_path}/find_treasure.png")) 
     case length
-      when "short" then @screen.click(@screen.find("#{self.image_path}/treasue_short.png"))    #zastapic koordynatami jesli rozpoznawanie ikonek nie bedzie zbyt dokladne
+      when "short" then @screen.click(@screen.find("#{self.image_path}/treasue_short.png"))    
       when "medium" then @screen.click(@screen.find("#{self.image_path}/treasure_medium.png"))
       when "long" then @screen.click(@screen.find("#{self.image_path}/treasure_long.png"))
       when "longest" then @screen.click(@screen.find("#{self.image_path}/treasure_longest.png"))
@@ -191,7 +182,7 @@ class SikuliAutomated
     star_menu
     scroll_to_explorer
     4.times {|i| 
-      region = @star_menu_region  #wypchnac to do zmiennej instancjowej, ale koniecznie sprawdzic czy region rejestruje zawartosc czy tylko ogranicza koordynaty szukania - jesli to pierwsze to przy kazdej okazji trzeba go reinstancjonowac
+      region = @star_menu_region  
       matches = region.find_all(Pattern.new("#{self.image_path}/explorer.png").similar(0.8))
       matches.each do |explorer|
         send_explorer_for_treasure(explorer, length)
@@ -206,8 +197,7 @@ class SikuliAutomated
       matches.each do |explorer|
         send_explorer_for_treasure(explorer, length)
         star_menu    
-      end
-      sleep(10)  #control sleep dla pewnosci ze przy zbiorowym wysylaniu grubych nie bedzie opoznien i wyslany nie bedzie swiecil sie na jasno jeszcze przez pare sek. Nie ma problemu z 10 sek bo i tak czynnosc jest wykonywana raz dziennie.
+      end 
       @screen.click(@screen.find("#{self.image_path}/b_scrollDown.png"))
     } 
   end

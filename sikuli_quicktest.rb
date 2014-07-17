@@ -79,13 +79,16 @@ class SikuliAutomated
     end 
   end 	
   
-  def click_on_empty_fields   #convienience method do testowania coordow klikalnych obiektow
+  def click_on_empty_fields#convienience method do testowania coordow klikalnych obiektow
     @sikuli.switch_app("Chrome") 
     matches = @screen.find_all("#{self.image_path}/empty_field.png")
-    matches.each do |object|
+    3.times {|i|
+      @screen.double_click(matches.next) 
+    }
+    #matches.each do |object|
      # @screen.click(object)  
      puts object.get_center.get_x  
-    end  
+    #end  
   end
   
   def dump_object_coords(type, sector, tolerance)  
@@ -158,4 +161,4 @@ instance = SikuliAutomated.new
 #instance.star_menu
 #instance.dump_object_coords("goldmine_temp", 2, 0.8)
 #instance.click_na_budynek
-instance.object_test
+instance.click_on_empty_fields

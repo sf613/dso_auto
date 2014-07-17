@@ -5,8 +5,8 @@ require 'builder'
 class TsoBot
   attr_accessor :sikuli_executor, :input_data_path
   
-  def initialize
-    @sikuli_executor = SikuliAutomated.new
+  def initialize(variant)
+    @sikuli_executor = SikuliAutomated.new(variant)
     @input_data_path = File.dirname(File.expand_path($0))
   end
   
@@ -33,4 +33,4 @@ end
 
 
 instance = TsoBot.new("work")
-instance.handle_marmor_find
+instance.handle_marmor_find   #tested at work, working fine
