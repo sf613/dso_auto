@@ -1,9 +1,8 @@
 require 'java'
 require 'rubygems'
 require 'csv'
+require 'sikuli'
 
-$CLASSPATH << "D:\sikuli"
-$JAVA_HOME = "C:\Program Files (x86)\Java\jre6" 
 # jar przeniesiony do katalogu z projektem zeby uniknac jebania sie z classpathem
 #
 require 'sikuli-script.jar'
@@ -13,11 +12,14 @@ java_import 'org.sikuli.script.Screen'
 java_import 'org.sikuli.script.Finder'
 java_import 'org.sikuli.script.Match'
 java_import 'org.sikuli.script.Key'
+java_import 'org.sikuli.script.KeyModifier'
+java_import 'org.sikuli.script.KeyCodeConverter'
 java_import 'org.sikuli.script.Pattern'
 java_import 'org.sikuli.script.Location'
 java_import 'org.sikuli.script.Settings'
 java_import 'org.sikuli.script.SikuliEvent'
 java_import 'org.sikuli.script.SikuliScript'
+
 
 class SikuliAutomated 
     attr_accessor :screen, :sikuli, :image_path
@@ -26,6 +28,7 @@ class SikuliAutomated
       @screen = Screen.new
       @sikuli = SikuliScript.new
       @image_path = File.dirname(File.expand_path($0))+"/res"
+      @csv_path = @image_path+"/xyWork"
     end
     
     def star_menu
@@ -35,16 +38,7 @@ class SikuliAutomated
 	  # @screen.click(result)	
 	  #end
     end
-
-	def click_on_geo
-	     region = Region.new(740,510,500,400)      # x,y,w,h   pierwsze dwa to coordy lewego gornego wierzcholka, pozostale to wymiary regionu; osie jak na normalnym ukladzie wspolrzednych tylko oY idzie w dol - lewy gorny rog ekranu to (0,0)
-    	 matches = region.find_all("#{self.image_path}/geo.png")
-    	 @c = 0
-    	 matches.each do |match|
-    	   @c+=1
-    	 end  
-    	 puts @c
-	end  
+ 
 	
 	 def method_sample_find_all_geos_in_region
 	     @sikuli.switch_app("Chrome") 
@@ -66,18 +60,7 @@ class SikuliAutomated
          @c+=1
        end  
        puts @c
-  end
-  def scroll_to_geo
-  # while not @screen.exists("#{self.image_path}/geo.png") do
-   @limiter = 0
-    while object_exists? != 1 && @limiter < 6 do           #BUG : finder lapie portret geologa w gornym lewym rogu na wiadomosci o wyslaniu; zaimplementowac find_in_region
-      puts 'no geo visible on screen, scrolling down .. '                #BUG : exists najwyrazniej nie odroznia wyszarzonego geo od zwyklego
-      @screen.click(@screen.find("#{self.image_path}/b_scrollDown.png"))
-      sleep(1)
-      @limiter +=1
-      puts @limiter
-    end 
-  end 	
+  end	
   
   def click_on_empty_fields#convienience method do testowania coordow klikalnych obiektow
     @sikuli.switch_app("Chrome") 
@@ -155,10 +138,113 @@ class SikuliAutomated
        region = Region.new(480,270,400,260)   
        region.mouse_move(region.find("#{self.image_path}/b_scrollDown.png"))      
     end
+    
+    def test_coords_from_csv   
+    @unique_sector_numbers = []
+    CSV.foreach(@csv_path+"/kupfer_smelter_w.csv") do |row|  
+      sector = row[0]    
+      @sector_key = case sector
+        when 1 then Key::NUM1
+        when 2 then Key::NUM2 
+        when 3 then Key::NUM3
+        when 4 then Key::NUM4
+        when 5 then Key::NUM5
+        when 6 then Key::NUM6 
+        when 7 then Key::NUM7        
+        when 8 then Key::NUM8       
+        when 9 then Key::NUM9                       
+      end 
+      @screen.type(@sector_key)   #poprawic w glownym
+      sleep(0.5)
+      location = Location.new(row[1].to_i, row[2].to_i) #poprawic w glownym
+      @screen.mouse_move(location)
+     end
+   end
+   
+   def test_iron_mines
+    @unique_sector_numbers = []
+    @counts = {}
+    @csv_hash = {}
+    10.times {|i|
+      @counts[i] = 0
+      @csv_hash[i] = []
+      }
+     puts "hash before injection : #{@csv_hash}"
+     puts "counts before injection : #{@counts}" 
+    CSV.foreach(@csv_path+"/build_eisen.csv") do |row|
+       @unique_sector_numbers << row[0].to_i
+       @csv_hash[row[0].to_i] << [row[1].to_i, row[2].to_i]  #tu powinno byc dopisywanie a nie nadpisywanie
+       @counts[row[0].to_i] +=1
+    end
+    @unique_sector_numbers.uniq!
+    @unique_sector_numbers.each do |sector| 
+      @sector_key = case sector
+        when 1 then Key.NUM1
+        when 2 then Key.NUM2 
+        when 3 then Key.NUM3
+        when 4 then Key.NUM4
+        when 5 then Key.NUM5
+        when 6 then Key.NUM6 
+        when 7 then Key.NUM7        
+        when 8 then Key.NUM8       
+        when 9 then Key.NUM9                       
+      end 
+
+      @sikuli.type(@sector_key) 
+      sleep(0.5)
+      @total_to_build = @csv_hash[sector].size
+      # @screen.move_to 
+      begin
+        puts "total number of mines to build : #{@total_to_build}" 
+        if  @total_to_build < 3
+           @csv_hash[sector].each do |coords|  
+              loc = Location.new(coords[0], coords[1])
+              @screen.mouse_move(loc)
+#              build_building(3, "eisen_mine", loc)
+          end
+        else 
+          @overflow = 0
+          @csv_hash[sector].each do |coords|  
+              loc = Location.new(coords[0], coords[1])
+              @screen.mouse_move(loc)
+#              build_building(3, "eisen_mine", loc)
+              puts "iron mine build on location #{}"
+              @total_to_build -=1
+              @overflow +=1
+              puts "overflow : #{@overflow}"
+              if @overflow >=3 
+                @overflow = 0
+                puts "waiting after 3 repetitions .. "
+                sleep(20)
+              end
+          end           
+        end  
+      rescue
+      end
+    end
+   end
+   def display
+     #@sikuli.switch_app("Chrome")
+     #@screen.type(Sikuli::TAB)
+     #
+     #FIX : kliknac na cos zeby byl focus, wtedy wrzucic type po stringu - np. '4'
+     #
+     p Sikuli::KEY_CMD
+     p Sikuli::KEY_ALT
+     p Sikuli::KEY_SHIFT
+     p Sikuli::KEY_CTRL
+     p Sikuli::KEY_NUM0
+     @screen.type(Sikuli::KEY_CMD)
+   end
+   
 end  #of class
 
 instance = SikuliAutomated.new
 #instance.star_menu
 #instance.dump_object_coords("goldmine_temp", 2, 0.8)
 #instance.click_na_budynek
-instance.click_on_empty_fields
+#instance.click_on_empty_fields
+#instance.test_coords_from_csv
+#instance.dump_object_coords("kupfer_smelter_h",1,0.6)
+#instance.test_iron_mines
+instance.display

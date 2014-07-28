@@ -52,7 +52,7 @@ class BobTheBuilder
   def replenish_fields   
     @unique_sector_numbers = []
     CSV.foreach(@csv_path+"/fields.csv") do |row|
-       @unique_sector_numbers << row[0]
+       @unique_sector_numbers << row[0].to_i
     end
     @unique_sector_numbers.uniq!       
     @unique_sector_numbers.each do |sector|   
@@ -108,7 +108,7 @@ class BobTheBuilder
    def replenish_wells
     @unique_sector_numbers = []
     CSV.foreach(@csv_path+"/wells.csv") do |row|
-       @unique_sector_numbers << row[0]
+       @unique_sector_numbers << row[0].to_i
     end
     @unique_sector_numbers.uniq!
     @unique_sector_numbers.each do |sector| 
@@ -160,4 +160,61 @@ class BobTheBuilder
       end
     end
    end  
+   
+  def rebuild_iron_mines
+    @unique_sector_numbers = []
+    @counts = {}
+    @csv_hash = {}
+    10.times {|i|
+      @counts[i] = 0
+      @csv_hash[i] = []
+      }
+    CSV.foreach(@csv_path+"/build_eisen.csv") do |row|
+       @unique_sector_numbers << row[0].to_i
+       @csv_hash[row[0].to_i] << [row[1].to_i, row[2].to_i]  #tu powinno byc dopisywanie a nie nadpisywanie
+       @counts[row[0]] +=1
+    end
+    @unique_sector_numbers.uniq!
+    @unique_sector_numbers.each do |sector| 
+      @sector_key = case sector
+        when 1 then Key.NUM1
+        when 2 then Key.NUM2 
+        when 3 then Key.NUM3
+        when 4 then Key.NUM4
+        when 5 then Key.NUM5
+        when 6 then Key.NUM6 
+        when 7 then Key.NUM7        
+        when 8 then Key.NUM8       
+        when 9 then Key.NUM9                       
+      end 
+
+      @sikuli.type(@sector_key) 
+      sleep(0.5)
+      @total_to_build = @csv_hash[sector].size
+      # @screen.move_to 
+      begin
+        puts "total number of mines to build : #{@total_to_build}" 
+        if  @total_to_build < 3
+           @csv_hash[sector].each do |coords|  
+              loc = Location.new(coords[0], coords[1])
+              build_building(3, "eisen_mine", loc)
+          end
+        else 
+          @overflow = 0
+          @csv_hash[sector].each do |coords|  
+              loc = Location.new(coords[0], coords[1])
+              build_building(3, "eisen_mine", loc)
+              puts "iron mine build on location #{}"
+              @total_to_build -=1
+              @overflow +=1
+              if @overflow >=3 
+                @overflow = 0
+                sleep(270)
+              end
+          end           
+        end  
+      rescue
+      end
+    end
+   end
 end
