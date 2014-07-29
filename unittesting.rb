@@ -157,7 +157,7 @@ class UnitTesting
       }
      puts "hash before injection : #{@csv_hash}"
      puts "counts before injection : #{@counts}" 
-    CSV.foreach(@csv_path+"/goldsmelters_min.csv") do |row|
+    CSV.foreach(@csv_path+"/ironmines2.csv") do |row|
        @unique_sector_numbers << row[0].to_i
        @csv_hash[row[0].to_i] << [row[1].to_i, row[2].to_i]  #tu powinno byc dopisywanie a nie nadpisywanie
        @counts[row[0].to_i] +=1
@@ -165,11 +165,16 @@ class UnitTesting
     @unique_sector_numbers.uniq!
     @current_queue_size = 0
     @unique_sector_numbers.each do |sector| 
+      puts sector.class
       Convenience.jump_to_sector(sector, @image_path, @screen)
-      sleep(0.5)
-      if sector == 2
-        puts "sector = 2, scrolling to view the smelters "
-        Convenience.drag_to_location(Location.new(608,184), Location.new(608,378), @screen)
+      sleep(1.5)
+      if sector == 3
+        puts "sector = 3, scrolling to view the smelters "
+        Convenience.drag_to_location(Location.new(711,247), Location.new(711,404), @screen)
+      end
+      if sector == 5
+        puts "sector = 5, scrolling to view the smelters "
+        Convenience.drag_to_location(Location.new(594,283), Location.new(1047,553), @screen)
       end
       @csv_hash[sector].each do |coords| 
          sleep(2)
