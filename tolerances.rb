@@ -1,5 +1,4 @@
 class Tolerances
-  initialize
-    @bakery = 0.8  
-  end
+  #cattr_accessor :bakery
+    @@bakery = 0.8  
 end

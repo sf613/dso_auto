@@ -3,6 +3,7 @@ require 'rubygems'
 
 require 'sikuli-script.jar'
 require 'csv'
+require 'convenience'
 java_import 'org.sikuli.script.Region'
 java_import 'org.sikuli.script.Screen'
 java_import 'org.sikuli.script.Finder'
@@ -50,24 +51,14 @@ class BobTheBuilder
     # wykorzystac @screen.drag_and_drop, zestawy koordynatow dla home/ work i dla kazdego konta osobno
   end
   def replenish_fields   
+    @timeout = 180
     @unique_sector_numbers = []
     CSV.foreach(@csv_path+"/fields.csv") do |row|
        @unique_sector_numbers << row[0].to_i
     end
     @unique_sector_numbers.uniq!       
     @unique_sector_numbers.each do |sector|   
-      @sector_key = case sector
-        when 1 then Key.NUM1
-        when 2 then Key.NUM2 
-        when 3 then Key.NUM3
-        when 4 then Key.NUM4
-        when 5 then Key.NUM5
-        when 6 then Key.NUM6 
-        when 7 then Key.NUM7        
-        when 8 then Key.NUM8       
-        when 9 then Key.NUM9                       
-      end 
-      @sikuli.type(@sector_key) 
+      @screen.type(Location.new(500,500), sector.to_s)
       sleep(0.5)
       # @screen.move_to 
       begin
@@ -96,7 +87,7 @@ class BobTheBuilder
               #TODO logowanie licznikow iteracji + testy
             }
             if @total_count > 0 
-              sleep(180)
+              sleep(@timeout)
             end  
            }
         end  
@@ -106,24 +97,14 @@ class BobTheBuilder
    end
     
    def replenish_wells
+     @timeout = 180
     @unique_sector_numbers = []
     CSV.foreach(@csv_path+"/wells.csv") do |row|
        @unique_sector_numbers << row[0].to_i
     end
     @unique_sector_numbers.uniq!
     @unique_sector_numbers.each do |sector| 
-      @sector_key = case sector
-        when 1 then Key.NUM1
-        when 2 then Key.NUM2 
-        when 3 then Key.NUM3
-        when 4 then Key.NUM4
-        when 5 then Key.NUM5
-        when 6 then Key.NUM6 
-        when 7 then Key.NUM7        
-        when 8 then Key.NUM8       
-        when 9 then Key.NUM9                       
-      end 
-      @sikuli.type(@sector_key) 
+      @screen.type(Location.new(500,500), sector.to_s)
       sleep(0.5)
       # @screen.move_to 
       begin
@@ -152,7 +133,7 @@ class BobTheBuilder
               #TODO logowanie licznikow iteracji + testy
             }
             if @total_count > 0 
-              sleep(180)
+              sleep(@timeout)
             end  
            }
         end  
@@ -162,6 +143,7 @@ class BobTheBuilder
    end  
    
   def rebuild_iron_mines
+    @timeout = 360  #kolo 5 min na zbudowanie 1 kopalni plus margines na animacje itp
     @unique_sector_numbers = []
     @counts = {}
     @csv_hash = {}
@@ -169,48 +151,104 @@ class BobTheBuilder
       @counts[i] = 0
       @csv_hash[i] = []
       }
-    CSV.foreach(@csv_path+"/build_eisen.csv") do |row|
+    CSV.foreach(@csv_path+"/ironmines.csv") do |row|
        @unique_sector_numbers << row[0].to_i
        @csv_hash[row[0].to_i] << [row[1].to_i, row[2].to_i]  #tu powinno byc dopisywanie a nie nadpisywanie
-       @counts[row[0]] +=1
+       @counts[row[0].to_i] +=1
     end
     @unique_sector_numbers.uniq!
+    @current_queue_size = 0
     @unique_sector_numbers.each do |sector| 
-      @sector_key = case sector
-        when 1 then Key.NUM1
-        when 2 then Key.NUM2 
-        when 3 then Key.NUM3
-        when 4 then Key.NUM4
-        when 5 then Key.NUM5
-        when 6 then Key.NUM6 
-        when 7 then Key.NUM7        
-        when 8 then Key.NUM8       
-        when 9 then Key.NUM9                       
-      end 
-
-      @sikuli.type(@sector_key) 
+      Convenience.jump_to_sector(sector, @image_path, @screen)
       sleep(0.5)
       @total_to_build = @csv_hash[sector].size
       # @screen.move_to 
       begin
-        puts "total number of mines to build : #{@total_to_build}" 
+        puts "total number of mines to build : #{@total_to_build} in sector #{sector}" 
         if  @total_to_build < 3
-           @csv_hash[sector].each do |coords|  
-              loc = Location.new(coords[0], coords[1])
-              build_building(3, "eisen_mine", loc)
+           @csv_hash[sector].each do |coords| 
+              if @current_queue_size >=3 
+                @current_queue_size = 0
+                puts "waiting after 3 repetitions .. "
+                sleep(@timeout)
+              end
+              loc = Location.new(coords[0].to_i, coords[1].to_i)
+              @screen.mouse_move(loc)
+              @current_queue_size +=1
+              build_building(3, "iron_mine", loc)
           end
         else 
-          @overflow = 0
+
           @csv_hash[sector].each do |coords|  
+              if @current_queue_size >=3 
+                @current_queue_size = 0
+                puts "waiting after 3 repetitions .. "
+                sleep(@timeout)
+              end
               loc = Location.new(coords[0], coords[1])
-              build_building(3, "eisen_mine", loc)
+              @screen.mouse_move(loc)
+              build_building(3, "iron_mine", loc)
+              @current_queue_size +=1
               puts "iron mine build on location #{}"
               @total_to_build -=1
-              @overflow +=1
-              if @overflow >=3 
-                @overflow = 0
-                sleep(270)
+              puts "current_queue_size : #{@current_queue_size}"
+          end           
+        end  
+      rescue
+      end
+    end
+   end
+   
+    def rebuild_gold_mines
+    @timeout = 640  #10 min budowania kopalnii, 40 sec sumarycznie na animacje
+    @unique_sector_numbers = []
+    @counts = {}
+    @csv_hash = {}
+    10.times {|i|
+      @counts[i] = 0
+      @csv_hash[i] = []
+      }
+    CSV.foreach(@csv_path+"/goldmines.csv") do |row|
+       @unique_sector_numbers << row[0].to_i
+       @csv_hash[row[0].to_i] << [row[1].to_i, row[2].to_i]  #tu powinno byc dopisywanie a nie nadpisywanie
+       @counts[row[0].to_i] +=1
+    end
+    @unique_sector_numbers.uniq!
+    @current_queue_size = 0
+    @unique_sector_numbers.each do |sector| 
+      Convenience.jump_to_sector(sector, @image_path, @screen)
+      sleep(0.5)
+      @total_to_build = @csv_hash[sector].size
+      # @screen.move_to 
+      begin
+        puts "total number of mines to build : #{@total_to_build} in sector #{sector}" 
+        if  @total_to_build < 3
+           @csv_hash[sector].each do |coords| 
+              if @current_queue_size >=3 
+                @current_queue_size = 0
+                puts "waiting after 3 repetitions .. "
+                sleep(@timeout)
               end
+              loc = Location.new(coords[0].to_i, coords[1].to_i)
+              @screen.mouse_move(loc)
+              @current_queue_size +=1
+              build_building(3, "gold_mine", loc)
+          end
+        else 
+
+          @csv_hash[sector].each do |coords|  
+              if @current_queue_size >=3 
+                @current_queue_size = 0
+                puts "waiting after 3 repetitions .. "
+                sleep(@timeout)
+              end
+              loc = Location.new(coords[0], coords[1])
+              @screen.mouse_move(loc)
+              build_building(3, "gold_mine", loc)
+              @current_queue_size +=1
+              puts "iron mine build on location #{}"
+              @total_to_build -=1
+              puts "current_queue_size : #{@current_queue_size}"
           end           
         end  
       rescue
