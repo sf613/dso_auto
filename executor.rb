@@ -130,7 +130,7 @@ class Executor
      end   
   end
   
-  def buff_building_group(coords_array)
+  def buff_building_group(coords_array,type)
     begin
     @unique_sector_numbers = []
     coords_array.each do |row|

@@ -29,7 +29,8 @@ class UnitTesting
       @screen = Screen.new
       @sikuli = SikuliScript.new
       @image_path = File.dirname(File.expand_path($0))+"/res"
-      @csv_path = @image_path+"/xyWork"
+      @csv_path = @image_path+"/xyHome/main"
+      @variant = "home"
     end
     
     def star_menu
@@ -140,25 +141,41 @@ class UnitTesting
        region.mouse_move(region.find("#{self.image_path}/b_scrollDown.png"))      
     end
     
-    def test_coords_from_csv   
+    def test_coords_from_csv 
+     @sikuli.switch_app("Chrome")
+    begin 
+      @screen.click(@screen.find(Pattern.new("#{self.image_path}/collapse_panel.png").similar(0.85)))
+    rescue => e
+      puts e  
+    end      
     @unique_sector_numbers = []
-    CSV.foreach(@csv_path+"/kupfer_smelter_w.csv") do |row|  
-      sector = row[0]    
-      @sector_key = case sector
-        when 1 then Key::NUM1
-        when 2 then Key::NUM2 
-        when 3 then Key::NUM3
-        when 4 then Key::NUM4
-        when 5 then Key::NUM5
-        when 6 then Key::NUM6 
-        when 7 then Key::NUM7        
-        when 8 then Key::NUM8       
-        when 9 then Key::NUM9                       
-      end 
-      @screen.type(@sector_key)   #poprawic w glownym
+    @counts = {}
+    @csv_hash = {}
+    10.times {|i|
+      @counts[i] = 0
+      @csv_hash[i] = []
+      }
+     puts "hash before injection : #{@csv_hash}"
+     puts "counts before injection : #{@counts}" 
+    CSV.foreach(@csv_path+"/goldsmelters_min.csv") do |row|
+       @unique_sector_numbers << row[0].to_i
+       @csv_hash[row[0].to_i] << [row[1].to_i, row[2].to_i]  #tu powinno byc dopisywanie a nie nadpisywanie
+       @counts[row[0].to_i] +=1
+    end
+    @unique_sector_numbers.uniq!
+    @current_queue_size = 0
+    @unique_sector_numbers.each do |sector| 
+      Convenience.jump_to_sector(sector, @image_path, @screen)
       sleep(0.5)
-      location = Location.new(row[1].to_i, row[2].to_i) #poprawic w glownym
-      @screen.mouse_move(location)
+      if sector == 2
+        puts "sector = 2, scrolling to view the smelters "
+        Convenience.drag_to_location(Location.new(608,184), Location.new(608,378), @screen)
+      end
+      @csv_hash[sector].each do |coords| 
+         sleep(2)
+         loc = Location.new(coords[0].to_i, coords[1].to_i)
+         @screen.mouse_move(loc)
+      end
      end
    end
    
@@ -253,4 +270,4 @@ instance = UnitTesting.new
 #instance.test_coords_from_csv
 #instance.dump_object_coords("kupfer_smelter_h",1,0.6)
 #instance.test_iron_mines
-instance.switch_to_main
+instance.test_coords_from_csv
