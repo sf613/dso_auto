@@ -18,18 +18,7 @@ class Multi1bot < AbstractBot
         @csv_path = @image_path+"/xyWork/multi1" 
       end
   end
-  
-    def switch_to_main
-    begin
-      @sikuli.switch_app(@browser)
-      @screen.click(@screen.find(Pattern.new("#{@sikuli_executor.image_path}/switch_portrait.png").similar(0.8)))
-      sleep(1)
-      @screen.click(@screen.find("#{@sikuli_executor.image_path}/besuchen.png"))
-      @screen.wait("#{@sikuli_executor.image_path}/city_centre.png", 40)
-    rescue  
-    end
-  end
-  
+ 
   def buff_main_bakeries
     @csv_path = @image_path+"/xyWork/main"
 

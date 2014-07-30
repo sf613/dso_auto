@@ -134,8 +134,7 @@ class Executor
 		end
 	end
 
-	def buff_building_group(coords_array)  #tutaj dodalem arg type tylko nie wiem po
-		# co ?
+	def buff_building_group(coords_array)  
 		begin
 			@unique_sector_numbers = []
 			coords_array.each do |row|
