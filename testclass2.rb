@@ -2,7 +2,7 @@ require 'testclass1'
 
 class Test2 < Test
   def initialize
-    super
+    @dupa = "1234"
   end
 end
 
