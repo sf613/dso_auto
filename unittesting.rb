@@ -274,7 +274,7 @@ class UnitTesting
 		#@sikuli.switch_app("Safari")
 		#@screen.mouse_move(Location.new(400,300))
 		#@sikuli.switch_app("C:\\Program Files (x86)\\Safari\\Safari")	
-	    s = App.new("Opera")
+	    s = App.new("Safari")
 	    s.focus
 	 rescue => e
 	 	puts e

@@ -8,8 +8,7 @@ class MainBot < AbstractBot
 
 end  #end of class
 
-instance = MainBot.new("work")
-p instance
+instance = MainBot.new("home")
 instance.buff_all_bows
-#instance.handle_marmor_find   #tested at work, working fine
+
 
