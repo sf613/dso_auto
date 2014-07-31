@@ -19,6 +19,7 @@ class Executor
 		@browser = browser
 		@screen = Screen.new
 		@sikuli = SikuliScript.new
+		@user = user
 		@image_path = File.dirname(File.expand_path($0))+"/res"
 		#@action_count = action_count
 		@variant = variant
@@ -199,7 +200,9 @@ class Executor
 				@screen.click(@screen.find("#{self.image_path}/b_cancel.png"))   #window cleanup
 			rescue
 			end
-			@screen.click(@screen.find("#{self.image_path}/back_home.png"))
+			if @user != "main"
+				@screen.click(@screen.find("#{self.image_path}/back_home.png"))
+			end
 		rescue => e
 			puts e
 		end

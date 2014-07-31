@@ -38,7 +38,7 @@ class AbstractBot
 	end
 
 	def handle_marmor_find
-		@sikuli_executor.find_all_resource("marmor", 3)
+		@sikuli_executor.find_all_resource("marmor", 10)
 	end
 
 	def handle_iron_find

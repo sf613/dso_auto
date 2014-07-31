@@ -17,6 +17,14 @@ class Multi3bot < AbstractBot
 			@star_menu_region = Region.new(760,560,400,280)
 			@csv_path = @image_path+"/xyWork/multi3"
 		end
+		
+		#login
+		@sikuli.switch_app("C:\\Program Files (x86)\\Opera\\launcher")
+		@screen.wait("#{@image_path}/a_m3.png",20)
+		@screen.click(@screen.find("#{@image_path}/b_play.png"))
+		sleep(10)
+		@screen.wait("#{@image_path}/a_m3.png",20)
+		@screen.click(@screen.find("#{@image_path}/ok_button.png"))
 	end
 
 	def switch_to_main
@@ -31,51 +39,86 @@ class Multi3bot < AbstractBot
 	end
 
 	def buff_main_bakeries
-		@csv_path = @image_path+"/xyWork/main"
-
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
 		buff_all_bakeries
 	end
 
 	def buff_main_bows
-		@csv_path = @image_path+"/xyWork/main"
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
 		buff_all_bows
 	end
 
 	def buff_main_bronzeswords
-		@csv_path = @image_path+"/xyWork/main"
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
 		buff_all_bronzeswords
 	end
 
 	def buff_main_copper_smelters
-		@csv_path = @image_path+"/xyWork/main"
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
 		buff_all_copper_smelters
 	end
 
 	def buff_main_goldtowers
-		@csv_path = @image_path+"/xyWork/main"
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
 		buff_all_goldtowers
 	end
 
 	def buff_main_goldsmelters
-		@csv_path = @image_path+"/xyWork/main"
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
 		buff_all_goldsmelters
 	end
 
 	def buff_main_goldsmelters_min
-		@csv_path = @image_path+"/xyWork/main"
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
 		buff_min_goldsmelters
 	end
 
 	def buff_main_coinmakers
-		@csv_path = @image_path+"/xyWork/main"
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
 		buff_all_coinmakers
 	end
 
 	def buff_main_coinmakers_min
-		@csv_path = @image_path+"/xyWork/main"
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
 		buff_min_coinmakers
 	end
 end
 
 instance = Multi3bot.new("work")
-instance.rebuild_fields
+#instance.rebuild_fields

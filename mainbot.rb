@@ -10,6 +10,6 @@ end  #end of class
 
 instance = MainBot.new("work")
 p instance
-instance.buff_all_bows
+instance.handle_marmor_find
 #instance.handle_marmor_find   #tested at work, working fine
 
