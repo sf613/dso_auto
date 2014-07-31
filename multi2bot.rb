@@ -112,7 +112,17 @@ class Multi2bot < AbstractBot
 		end
 		buff_min_coinmakers
 	end
+
+	def buff_main_toolmakers
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
+		buff_all_toolmakers
+	end
 end
 
 instance = Multi2bot.new("work")
-instance.buff_main_bows
+instance.buff_main_goldmines
+instance.buff_main_goldsmelters_min

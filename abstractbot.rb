@@ -22,6 +22,7 @@ class AbstractBot
 			@star_menu_region = Region.new(760,560,400,280)
 			@csv_path = @image_path+"/xyWork/main"
 		end
+		@sikuli.switch_app(@browser)
 	end
 
 	def switch_to_main
@@ -57,7 +58,6 @@ class AbstractBot
 	#  BUFFING
 	#
 	def buff_all_bakeries
-		@sikuli.switch_app(@browser)
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/bakeries.csv")
 		@sikuli_executor.buff_building_group(coords)
@@ -65,7 +65,6 @@ class AbstractBot
 
 	def buff_all_bows
 		begin
-			@sikuli.switch_app(@browser)
 			switch_to_main
 			coords = read_coords_from_file("#{@csv_path}/bows.csv")
 			@sikuli_executor.buff_building_group(coords)
@@ -75,60 +74,61 @@ class AbstractBot
 	end
 
 	def buff_all_bronzeswords
-		@sikuli.switch_app(@browser)
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/bronzeswords.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
 	def buff_all_copper_smelters
-		@sikuli.switch_app(@browser)
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/copper_smelters.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
 	def buff_all_goldsmelters
-		@sikuli.switch_app(@browser)
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldsmelters.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
+	def buff_min_goldsmelters
+		switch_to_main
+		coords = read_coords_from_file("#{@csv_path}/goldsmelters_min.csv")
+		@sikuli_executor.buff_building_group(coords)
+	end
+
+
 	def buff_all_coinmakers
-		@sikuli.switch_app(@browser)
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/coins.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
 	def buff_min_coinmakers
-		@sikuli.switch_app(@browser)
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/coins_min.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
 	def buff_all_goldmines
-		@sikuli.switch_app(@browser)
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldmines.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
-	def buff_min_goldmines
-		@sikuli.switch_app(@browser)
-		switch_to_main
-		coords = read_coords_from_file("#{@csv_path}/goldmines_min.csv")
-		@sikuli_executor.buff_building_group(coords)
-	end
-
 	def buff_all_goldtowers
-		@sikuli.switch_app(@browser)
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldtowers.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
+	
+	def buff_all_toolmakers
+		switch_to_main
+		coords = read_coords_from_file("#{@csv_path}/toolmakers.csv")
+		@sikuli_executor.buff_building_group(coords)
+	end
+	
+	
 
 	#
 	#  MINES

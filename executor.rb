@@ -143,20 +143,6 @@ class Executor
 			end
 			@unique_sector_numbers.uniq!
 			@unique_sector_numbers.each do |sector|
-
-=begin
-			pseudocode :
-
-			- preemptywnie otworzyc menu, przescrollowac do koszy i wybrac jeden
-			- if row[0] == sector
-			if "cancel" == visible
-			doubleclick(location)
-			else
-			star_menu
-			click on baskets
-			doubleclick(location)
-=end
-
 				Convenience.jump_to_sector(sector, @image_path, @screen)
 				star_menu
 				if object_exists?("#{self.image_path}/basket.png", 0.8) != 1
@@ -183,17 +169,8 @@ class Executor
 					#location = Location.new(row[1].to_i, row[2].to_i)
 					#buff_building(location)
 					end
+					
 				end
-=begin
-			old code
-			coords_array.each do |row|    #buff only buildings in sector X
-			if row[0].to_i == sector
-			sleep(0.5)
-			location = Location.new(row[1].to_i, row[2].to_i)
-			buff_building(location)
-			end
-			end
-=end
 			end
 			begin
 				@screen.click(@screen.find("#{self.image_path}/b_cancel.png"))   #window cleanup
