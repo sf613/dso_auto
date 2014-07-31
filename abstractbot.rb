@@ -31,7 +31,7 @@ class AbstractBot
 				@screen.click(@screen.find(Pattern.new("#{@sikuli_executor.image_path}/switch_portrait.png").similar(0.8)))
 				sleep(1)
 				@screen.click(@screen.find("#{@sikuli_executor.image_path}/besuchen.png"))
-				@screen.wait("#{@sikuli_executor.image_path}/city_centre.png", 40)
+				@screen.wait("#{@sikuli_executor.image_path}/city_centre.png", 20)
 			end
 		rescue
 		end

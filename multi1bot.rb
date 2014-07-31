@@ -17,17 +17,14 @@ class Multi1bot < AbstractBot
 			@star_menu_region = Region.new(760,560,400,280)
 			@csv_path = @image_path+"/xyWork/multi1"
 		end
-	end
-
-	def switch_to_main
-		begin
-			@sikuli.switch_app(@browser)
-			@screen.click(@screen.find(Pattern.new("#{@sikuli_executor.image_path}/switch_portrait.png").similar(0.8)))
-			sleep(1)
-			@screen.click(@screen.find("#{@sikuli_executor.image_path}/besuchen.png"))
-			@screen.wait("#{@sikuli_executor.image_path}/city_centre.png", 40)
-		rescue
-		end
+		
+		#login
+		@sikuli.switch_app("C:\\Program Files (x86)\\Mozilla Firefox\\firefox")
+		@screen.wait("#{@image_path}/a_m1.png",20)
+		@screen.click(@screen.find("#{@image_path}/b_play.png"))
+		sleep(10)
+		@screen.wait("#{@image_path}/a_m1.png",20)
+		@screen.click(@screen.find("#{@image_path}/ok_button.png"))
 	end
 
 	def buff_main_bakeries

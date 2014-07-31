@@ -27,17 +27,6 @@ class Multi3bot < AbstractBot
 		@screen.click(@screen.find("#{@image_path}/ok_button.png"))
 	end
 
-	def switch_to_main
-		begin
-			@sikuli.switch_app(@browser)
-			@screen.click(@screen.find(Pattern.new("#{@sikuli_executor.image_path}/switch_portrait.png").similar(0.8)))
-			sleep(1)
-			@screen.click(@screen.find("#{@sikuli_executor.image_path}/besuchen.png"))
-			@screen.wait("#{@sikuli_executor.image_path}/city_centre.png", 40)
-		rescue
-		end
-	end
-
 	def buff_main_bakeries
 		if @variant == "home"
 			@csv_path = @image_path+"/xyHome/main"
