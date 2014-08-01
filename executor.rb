@@ -36,7 +36,7 @@ class Executor
 		@screen.click(@screen.find("#{self.image_path}/star.png"))
 	end
 
-	def object_exists?(object, tolerance)  #wrapper dziala cudownie
+	def object_exists?(object, tolerance)  
 		begin
 			pattern = Pattern.new(object).similar(tolerance)
 			match = @screen.find(pattern)
@@ -75,10 +75,10 @@ class Executor
 		@screen.click(@screen.find("#{self.image_path}/ok_button.png"))
 	end
 
-	def send_geo?(resource,geo)  #convenience
+	def send_geo?(resource,geo)  
 		send_geo_for(resource,geo)
 		if @count > 1
-			star_menu#reopen for the next one
+			star_menu
 		end
 		@count -= 1
 	end
@@ -96,7 +96,7 @@ class Executor
 		@geo_row  = @screen.find_all(Pattern.new("#{self.image_path}/geo.png").similar(0.8))
 		@geo_row.each do |geo|
 			if @count > 0
-				send_geo?(resource,geo)# @count decrements
+				send_geo?(resource,geo)
 			end
 		end
 		if @count > 0
@@ -118,18 +118,12 @@ class Executor
 	def buff_building(coord)
 		star_menu
 		if object_exists?("#{self.image_path}/basket.png", 0.8) != 1
-			@screen.click(@screen.find("#{self.image_path}/l_specialisten.png"))  #soft reset
-			# okna, jesli nie widac na ekranie buffow to trudno stwierdzic czy scroll jest
-			# powyzej czy ponizej, wiec lepiej zresetowac
+			@screen.click(@screen.find("#{self.image_path}/l_specialisten.png"))  
 			@screen.click(@screen.find("#{self.image_path}/l_buffs.png"))
 			scroll_to_baskets
 		end
-		@screen.click(@screen.find("#{self.image_path}/basket.png"))    #zalozenie, ze
-		# przy kilku koszykach w polu widzenia wybierze dowolny, a przy jednym - jedyny -
-		# wiec nie trzeba kombinowac z iterowaniem albo wybieraniem elementu z kolekcji
+		@screen.click(@screen.find("#{self.image_path}/basket.png"))    
 		@screen.double_click(coord)
-		#check_for_cancel_button   # chyba pozostalosc po jakiejs innej metodzie albo
-		# blad przy kopiownaiu.
 		if object_exists?("#{self.image_path}/b_cancel.png", 0.8) == 1
 			@screen.click(@screen.find("#{self.image_path}/b_cancel.png"))
 		end
@@ -166,14 +160,16 @@ class Executor
 							sleep(1.5)
 						end
 						sleep(0.5)
-					#location = Location.new(row[1].to_i, row[2].to_i)
-					#buff_building(location)
 					end
 					
 				end
+				begin
+					@screen.click(@screen.find("#{self.image_path}/b_cancel.png"))   #window cleanup before jumping to new sector
+				rescue
+				end
 			end
 			begin
-				@screen.click(@screen.find("#{self.image_path}/b_cancel.png"))   #window cleanup
+				@screen.click(@screen.find("#{self.image_path}/b_cancel.png"))   #window cleanup after buffing
 			rescue
 			end
 			if @user != "main"

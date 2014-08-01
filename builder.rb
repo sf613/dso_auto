@@ -16,7 +16,7 @@ java_import 'org.sikuli.script.Settings'
 java_import 'org.sikuli.script.SikuliEvent'
 java_import 'org.sikuli.script.SikuliScript'
 class BobTheBuilder
-	attr_accessor :screen, :sikuli, :image_path, :count, :variant, :user#nie publikowac jawnie w kodzie nickow userow
+	attr_accessor :screen, :sikuli, :image_path, :count, :variant, :user
 	def initialize(variant,user,browser)
 		@browser = browser
 		@screen = Screen.new
@@ -32,7 +32,7 @@ class BobTheBuilder
 			@star_menu_region = Region.new(760,560,400,280)
 			@csv_path = @image_path+"/xyWork/#{user}"
 			@building_menu_coords = [718,899]
-			@building_window = Region.new(547,464,340,400)     #nie dopasowuje sie do rozmiaru okna ale obejmuje max rozmiar na jakim pojawiaja sie ikony budynkow
+			@building_window = Region.new(547,464,340,400)    
 		end
 	end
 
@@ -50,13 +50,6 @@ class BobTheBuilder
 		sleep(1)
 	end
 	
-	#   547:464
-
-	def scroll_view_from_sector_center
-		#do stuff
-		# wykorzystac @screen.drag_and_drop, zestawy koordynatow dla home/ work i dla kazdego konta osobno
-	end
-
 	def replenish_fields
 		@current_queue_size = 0
 		#@sikuli.switch_app(@browser)
@@ -75,19 +68,11 @@ class BobTheBuilder
 				@empty = @screen.find_all(Pattern.new("#{self.image_path}/empty_field.png").similar(0.5))
 				@total_found = 0
 				p @empty
-=begin				@empty.each do |field|  # ISTOTNE : sprawdzic czy nie bedzie konkurencji pomiedzy findami - obiekty powinny byc hermetyczne ale nie wiadomo czy sie nie odcachuja jak im cos odjebie - wtedy wykonanie finda w build_building moze wyczyscic findy z empty fieldami
-					@total_found +=1
-				end
-				p @empty
-				puts "total number of fields to build : #{@total_found}"
-=end
 				begin
-					@empty.each do |field|          #tu sie nie wykonuje
+					@empty.each do |field|          
 						begin
 						    if @current_queue_size < 3
 								p field
-	                            # ISTOTNE : sprawdzic czy nie bedzie konkurencji pomiedzy findami - obiekty powinny byc hermetyczne ale nie wiadomo czy sie nie odcachuja jak im cos
-								# odjebie - wtedy wykonanie finda w build_building moze wyczyscic findy z empty fieldami
 								loc = Location.new(field.get_center.get_x, field.get_center.get_y)
 								build_building(3, "field_2", loc)
 								@current_queue_size +=1
@@ -127,12 +112,12 @@ class BobTheBuilder
 			begin
 				empty = @screen.find_all(Pattern.new("#{self.image_path}/empty_well.png").similar(0.5))
 				@total_found = 0
-				empty.each do |well|  # ISTOTNE : sprawdzic czy nie bedzie konkurencji pomiedzy findami - obiekty powinny byc hermetyczne ale nie wiadomo czy sie nie odcachuja jak im cos odjebie - wtedy wykonanie finda w build_building moze wyczyscic findy z empty fieldami
+				empty.each do |well|  
 					@total_found +=1
 				end
 				puts "total number of wells to build : #{@total_found}"
 				if  @total_found < 3
-					empty.each do |well|  # ISTOTNE : sprawdzic czy nie bedzie konkurencji pomiedzy findami - obiekty powinny byc hermetyczne ale nie wiadomo czy sie nie odcachuja jak im cos odjebie - wtedy wykonanie finda w build_building moze wyczyscic findy z empty fieldami
+					empty.each do |well|  
 						loc = Location.new(well.get_center.get_x, well.get_center.get_y)
 						build_building(3, "well_2", loc)
 					end
@@ -147,7 +132,7 @@ class BobTheBuilder
 								build_building(3, "well_2", loc)
 								@total_found -=1
 							end
-						#TODO logowanie licznikow iteracji + testy
+						#TODO 
 						}
 						if @total_count > 0
 							sleep(@timeout)
@@ -161,7 +146,7 @@ class BobTheBuilder
 
 	def rebuild_iron_mines
 		@sikuli.switch_app(@browser)
-		@timeout = 360#kolo 5 min na zbudowanie 1 kopalni plus margines na animacje itp
+		@timeout = 360
 		@unique_sector_numbers = []
 		@counts = {}
 		@csv_hash = {}
@@ -171,7 +156,7 @@ class BobTheBuilder
 		}
 		CSV.foreach(@csv_path+"/ironmines.csv") do |row|
 			@unique_sector_numbers << row[0].to_i
-			@csv_hash[row[0].to_i] << [row[1].to_i, row[2].to_i] #tu powinno byc dopisywanie a nie nadpisywanie
+			@csv_hash[row[0].to_i] << [row[1].to_i, row[2].to_i] 
 			@counts[row[0].to_i] +=1
 		end
 		@unique_sector_numbers.uniq!
@@ -180,7 +165,6 @@ class BobTheBuilder
 			Convenience.jump_to_sector(sector, @image_path, @screen)
 			sleep(0.5)
 			@total_to_build = @csv_hash[sector].size
-			# @screen.move_to
 			begin
 				puts "total number of mines to build : #{@total_to_build} in sector #{sector}"
 				if  @total_to_build < 3
@@ -219,7 +203,7 @@ class BobTheBuilder
 
 	def rebuild_gold_mines
 		@sikuli.switch_app(@browser)
-		@timeout = 640#10 min budowania kopalnii, 40 sec sumarycznie na animacje
+		@timeout = 640
 		@unique_sector_numbers = []
 		@counts = {}
 		@csv_hash = {}
@@ -229,7 +213,7 @@ class BobTheBuilder
 		}
 		CSV.foreach(@csv_path+"/goldmines.csv") do |row|
 			@unique_sector_numbers << row[0].to_i
-			@csv_hash[row[0].to_i] << [row[1].to_i, row[2].to_i] #tu powinno byc dopisywanie a nie nadpisywanie
+			@csv_hash[row[0].to_i] << [row[1].to_i, row[2].to_i] 
 			@counts[row[0].to_i] +=1
 		end
 		@unique_sector_numbers.uniq!

@@ -16,15 +16,15 @@ class Multi3bot < AbstractBot
 		elsif @variant == "work"
 			@star_menu_region = Region.new(760,560,400,280)
 			@csv_path = @image_path+"/xyWork/multi3"
+			#login
+			@sikuli.switch_app("C:\\Program Files (x86)\\Opera\\launcher")
+			@screen.wait("#{@image_path}/a_m3.png",20)
+			@screen.click(@screen.find("#{@image_path}/b_play.png"))
+			sleep(10)
+			@screen.wait("#{@image_path}/a_m3.png",20)
+			@screen.click(@screen.find("#{@image_path}/ok_button.png"))
 		end
-		
-		#login
-		@sikuli.switch_app("C:\\Program Files (x86)\\Opera\\launcher")
-		@screen.wait("#{@image_path}/a_m3.png",20)
-		@screen.click(@screen.find("#{@image_path}/b_play.png"))
-		sleep(10)
-		@screen.wait("#{@image_path}/a_m3.png",20)
-		@screen.click(@screen.find("#{@image_path}/ok_button.png"))
+
 	end
 
 	def buff_main_bakeries
@@ -70,6 +70,15 @@ class Multi3bot < AbstractBot
 			@csv_path = @image_path+"/xyWork/main"
 		end
 		buff_all_goldtowers
+	end
+
+	def buff_main_goldmines
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
+		buff_all_goldmines
 	end
 
 	def buff_main_goldsmelters
@@ -120,3 +129,4 @@ end
 
 instance = Multi3bot.new("work")
 #instance.rebuild_fields
+instance.buff_main_goldtowers

@@ -14,17 +14,18 @@ class Multi1bot < AbstractBot
 			@star_menu_region = Region.new(480,270,400,260)
 			@csv_path = @image_path+"/xyHome/multi1"
 		elsif @variant == "work"
+
 			@star_menu_region = Region.new(760,560,400,280)
 			@csv_path = @image_path+"/xyWork/multi1"
+			#login
+			@sikuli.switch_app("C:\\Program Files (x86)\\Mozilla Firefox\\firefox")
+			@screen.wait("#{@image_path}/a_m1.png",20)
+			@screen.click(@screen.find("#{@image_path}/b_play.png"))
+			sleep(10)
+			@screen.wait("#{@image_path}/a_m1.png",20)
+			@screen.click(@screen.find("#{@image_path}/ok_button.png"))
 		end
-		
-		#login
-		@sikuli.switch_app("C:\\Program Files (x86)\\Mozilla Firefox\\firefox")
-		@screen.wait("#{@image_path}/a_m1.png",20)
-		@screen.click(@screen.find("#{@image_path}/b_play.png"))
-		sleep(10)
-		@screen.wait("#{@image_path}/a_m1.png",20)
-		@screen.click(@screen.find("#{@image_path}/ok_button.png"))
+
 	end
 
 	def buff_main_bakeries
@@ -72,6 +73,15 @@ class Multi1bot < AbstractBot
 		buff_all_goldtowers
 	end
 
+	def buff_main_goldmines
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
+		buff_all_goldmines
+	end
+
 	def buff_main_goldsmelters
 		if @variant == "home"
 			@csv_path = @image_path+"/xyHome/main"
@@ -107,7 +117,7 @@ class Multi1bot < AbstractBot
 		end
 		buff_min_coinmakers
 	end
-	
+
 	def buff_main_toolmakers
 		if @variant == "home"
 			@csv_path = @image_path+"/xyHome/main"

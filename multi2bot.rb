@@ -16,20 +16,19 @@ class Multi2bot < AbstractBot
 		elsif @variant == "work"
 			@star_menu_region = Region.new(760,560,400,280)
 			@csv_path = @image_path+"/xyWork/multi2"
+			#login
+			@sikuli.switch_app("C:\\Program Files (x86)\\Safari\\Safari")
+			begin
+				@screen.wait("#{@image_path}/a_m2.png",20)
+				@screen.click(@screen.find("#{@image_path}/b_play.png"))
+				sleep(10)
+				@screen.wait("#{@image_path}/a_m2.png",20)
+				@screen.click(@screen.find("#{@image_path}/ok_button.png"))
+			rescue => e
+				puts e
+			end
 		end
-						
-		#login
-		@sikuli.switch_app("C:\\Program Files (x86)\\Safari\\Safari") # hack : sa problemy z focusowaniem aplikacji jesli jest kilka uruchomionych przegladarek, stad skrypt nie bedzie odpalany przy zalogowanym multi tylko uwzgledni tez proces logowania
-		#important  : jest poczynione zalozenie ze przegladarki maja zapamietane dane logowania i odtwarzaja sesje po kazdym starcie bez koniecznosci manualnej interwencji
-		begin
-			@screen.wait("#{@image_path}/a_m2.png",20)                # w teorii jesli przegladarka jest otwarta i multi zalogowane to nawet po otwarciu nowego focus pozostanie na pierwszym, wiec nie ma sensu zeby brak ikon do logowania wywalal skrypt exceptionem
-			@screen.click(@screen.find("#{@image_path}/b_play.png"))
-			sleep(10)
-			@screen.wait("#{@image_path}/a_m2.png",20)
-			@screen.click(@screen.find("#{@image_path}/ok_button.png"))
-		rescue => e
-			puts e
-		end
+
 	end
 
 	def buff_main_bakeries
@@ -75,6 +74,15 @@ class Multi2bot < AbstractBot
 			@csv_path = @image_path+"/xyWork/main"
 		end
 		buff_all_goldtowers
+	end
+
+	def buff_main_goldmines
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
+		buff_all_goldmines
 	end
 
 	def buff_main_goldsmelters
