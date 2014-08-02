@@ -82,21 +82,33 @@ class AbstractBot
 	def buff_all_copper_smelters
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/copper_smelters.csv")
-		@sikuli_executor.buff_building_group(coords)
+    if @variant == "home"
+      @sikuli_executor.buff_building_group(coords, "yes", "copper_smelters")
+    else 
+      @sikuli_executor.buff_building_group(coords)
+    end
 	end
 
 	def buff_all_goldsmelters
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldsmelters.csv")
-		@sikuli_executor.buff_building_group(coords)
+    if @variant == "home"
+      @sikuli_executor.buff_building_group(coords, "yes", "goldsmelters")
+    else 
+      @sikuli_executor.buff_building_group(coords)
+    end
 	end
 
 	def buff_min_goldsmelters
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldsmelters_min.csv")
-		@sikuli_executor.buff_building_group(coords)
+		if @variant == "home"
+		  @sikuli_executor.buff_building_group(coords, "yes", "goldsmelters")
+		  puts "scrolling"
+		else 
+		  @sikuli_executor.buff_building_group(coords)
+		end
 	end
-
 
 	def buff_all_coinmakers
 		switch_to_main
@@ -128,7 +140,15 @@ class AbstractBot
 		@sikuli_executor.buff_building_group(coords)
 	end
 	
-	
+  def buff_all_ironmines
+    switch_to_main
+    coords = read_coords_from_file("#{@csv_path}/ironmines.csv")
+    if @variant == "home"
+      @sikuli_executor.buff_building_group(coords, "yes", "ironmines")
+    else 
+      @sikuli_executor.buff_building_group(coords)
+    end
+  end	
 
 	#
 	#  MINES

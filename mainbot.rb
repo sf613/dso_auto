@@ -8,8 +8,7 @@ class MainBot < AbstractBot
 
 end  #end of class
 
-instance = MainBot.new("work")
-instance.buff_all_goldmines
+instance = MainBot.new("home")
+p instance.variant
 instance.buff_min_goldsmelters
-instance.buff_all_goldtowers
 
