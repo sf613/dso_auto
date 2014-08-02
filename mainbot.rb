@@ -9,6 +9,6 @@ class MainBot < AbstractBot
 end  #end of class
 
 instance = MainBot.new("home")
-p instance.variant
 instance.buff_min_goldsmelters
+
 

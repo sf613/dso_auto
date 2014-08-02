@@ -18,6 +18,7 @@ class Convenience
 	end
 
 	def self.drag_to_location(locStart, locEnd, screen)
+	  puts "scrolling the screen"
 		screen.drag_drop(locStart,locEnd)
 	end
 

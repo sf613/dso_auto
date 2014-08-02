@@ -93,6 +93,7 @@ class AbstractBot
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldsmelters.csv")
     if @variant == "home"
+      puts "scroll needed"
       @sikuli_executor.buff_building_group(coords, "yes", "goldsmelters")
     else 
       @sikuli_executor.buff_building_group(coords)
@@ -103,6 +104,7 @@ class AbstractBot
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldsmelters_min.csv")
 		if @variant == "home"
+		  puts "scroll needed"
 		  @sikuli_executor.buff_building_group(coords, "yes", "goldsmelters")
 		  puts "scrolling"
 		else 

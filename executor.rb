@@ -139,11 +139,13 @@ class Executor
       @unique_sector_numbers.each do |sector|
         Convenience.jump_to_sector(sector, @image_path, @screen)
         
+        puts "#{sector.class}, #{scroll.class} , #{type.class}"
         #perform scrolling the view if necessary
-        
-        if sector == 2 && scroll && type == "goldsmelter"
+
+        if sector == 2 && scroll && type == "goldsmelters"
           puts "sector = 2, scrolling to view the smelters "
           Convenience.drag_to_location(Location.new(608,184), Location.new(608,378), @screen)
+          
         end
         if sector == 1 && scroll && type == "copper_smelters"
           puts "sector = 1, scrolling to view the smelters "

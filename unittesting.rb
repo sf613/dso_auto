@@ -272,11 +272,9 @@ class UnitTesting
 	
 	def focus
 		begin
-		#@sikuli.switch_app("Safari")
-		#@screen.mouse_move(Location.new(400,300))
-		#@sikuli.switch_app("C:\\Program Files (x86)\\Safari\\Safari")	
-	    s = App.new("Safari")
-	    s.focus
+    @sikuli.switch_app("Chrome")
+    sleep(1)
+    @screen.drag_drop(Location.new(608,184), Location.new(608,378))
 	 rescue => e
 	 	puts e
 	 end
