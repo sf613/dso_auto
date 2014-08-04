@@ -26,6 +26,7 @@ class UnitTesting
 	attr_accessor :screen, :sikuli, :image_path
 	def initialize
 		@screen = Screen.new
+		@browser = "Chrome"
 		@sikuli = SikuliScript.new
 		@image_path = File.dirname(File.expand_path($0))+"/res"
 		@csv_path = @image_path+"/xyHome/main"
@@ -272,9 +273,9 @@ class UnitTesting
 	
 	def focus
 		begin
-    @sikuli.switch_app("Chrome")
+    @sikuli.switch_app("Siedler")
     sleep(1)
-    @screen.drag_drop(Location.new(608,184), Location.new(608,378))
+	@screen.type(Location.new(600,300), "b")
 	 rescue => e
 	 	puts e
 	 end

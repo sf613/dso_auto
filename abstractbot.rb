@@ -4,6 +4,7 @@ require 'executor'
 require 'builder'
 require 'convenience'
 require 'tolerances'
+require 'army'
 
 class AbstractBot
 	attr_accessor :sikuli_executor,:screen, :sikuli, :image_path,:variant
@@ -13,6 +14,7 @@ class AbstractBot
 		@screen = Screen.new
 		@sikuli = SikuliScript.new
 		@sikuli_executor = Executor.new(variant, "main", @browser)
+		@army = Army.new(variant, "main", @browser)
 		@image_path = File.dirname(File.expand_path($0))+"/res"
 		@variant = variant
 		if @variant == "home"
@@ -22,7 +24,7 @@ class AbstractBot
 			@star_menu_region = Region.new(760,560,400,280)
 			@csv_path = @image_path+"/xyWork/main"
 		end
-		@sikuli.switch_app(@browser)
+		@sikuli.switch_app("Siedler")
 	end
 
 	def switch_to_main
@@ -82,33 +84,33 @@ class AbstractBot
 	def buff_all_copper_smelters
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/copper_smelters.csv")
-    if @variant == "home"
-      @sikuli_executor.buff_building_group(coords, "yes", "copper_smelters")
-    else 
-      @sikuli_executor.buff_building_group(coords)
-    end
+		if @variant == "home"
+			@sikuli_executor.buff_building_group(coords, "yes", "copper_smelters")
+		else
+		@sikuli_executor.buff_building_group(coords)
+		end
 	end
 
 	def buff_all_goldsmelters
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldsmelters.csv")
-    if @variant == "home"
-      puts "scroll needed"
-      @sikuli_executor.buff_building_group(coords, "yes", "goldsmelters")
-    else 
-      @sikuli_executor.buff_building_group(coords)
-    end
+		if @variant == "home"
+			puts "scroll needed"
+			@sikuli_executor.buff_building_group(coords, "yes", "goldsmelters")
+		else
+		@sikuli_executor.buff_building_group(coords)
+		end
 	end
 
 	def buff_min_goldsmelters
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldsmelters_min.csv")
 		if @variant == "home"
-		  puts "scroll needed"
-		  @sikuli_executor.buff_building_group(coords, "yes", "goldsmelters")
-		  puts "scrolling"
-		else 
-		  @sikuli_executor.buff_building_group(coords)
+			puts "scroll needed"
+			@sikuli_executor.buff_building_group(coords, "yes", "goldsmelters")
+			puts "scrolling"
+		else
+		@sikuli_executor.buff_building_group(coords)
 		end
 	end
 
@@ -135,22 +137,22 @@ class AbstractBot
 		coords = read_coords_from_file("#{@csv_path}/goldtowers.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
-	
+
 	def buff_all_toolmakers
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/toolmakers.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
-	
-  def buff_all_ironmines
-    switch_to_main
-    coords = read_coords_from_file("#{@csv_path}/ironmines.csv")
-    if @variant == "home"
-      @sikuli_executor.buff_building_group(coords, "yes", "ironmines")
-    else 
-      @sikuli_executor.buff_building_group(coords)
-    end
-  end	
+
+	def buff_all_ironmines
+		switch_to_main
+		coords = read_coords_from_file("#{@csv_path}/ironmines.csv")
+		if @variant == "home"
+			@sikuli_executor.buff_building_group(coords, "yes", "ironmines")
+		else
+		@sikuli_executor.buff_building_group(coords)
+		end
+	end
 
 	#
 	#  MINES
@@ -165,5 +167,58 @@ class AbstractBot
 
 	def rebuild_fields
 		BobTheBuilder.new("work",@user,@browser).replenish_fields
+	end
+
+	def composite_action
+		@variant = ARGV[0]
+		if ARGV[1] == "buffs"
+			ARGV[2..-1].each do |a|
+				if a == "goldmine"
+					buff_all_goldmines
+				elsif 	a == "gold"
+					buff_all_goldsmelters
+				elsif 	a == "gold_m"
+					buff_min_goldsmelters
+				elsif 	a == "coins"
+					buff_all_coinmakers
+				elsif 	a == "coins_m"
+					buff_min_coinmakers
+				elsif 	a == "towers"
+					buff_all_goldtowers
+				elsif 	a == "ironmine"
+					buff_all_ironmines
+				elsif 	a == "iron"
+					buff_all_ironsmelters
+				elsif 	a == "ironsword"
+					buff_all_ironswords
+				elsif 	a == "steel"
+					buff_all_steelsmelters
+				elsif 	a == "steelsword"
+					buff_all_steelswords
+				elsif 	a == "bronzesword"
+					buff_all_bronzeswords
+				elsif 	a == "bronze"
+					buff_all_copper_smelters
+				elsif 	a == "marmorfind"
+					handle_marmor_find
+				elsif 	a == "ironfind"
+					handle_iron_find
+				elsif 	a == "goldfind"
+					handle_gold_find
+				end
+			end
+		end
+	end
+
+	def produce_units
+		@variant = ARGV[0]
+		puts "arguments : #{ARGV}"
+		if ARGV[1] == "units"
+			@unit_type = ARGV[2]
+			puts "browser : #{@browser}, class : #{@browser.class}"
+			@number = ARGV[3]
+			@sikuli.switch_app(@browser)
+			@army.build_units(@unit_type, @number)
+		end
 	end
 end

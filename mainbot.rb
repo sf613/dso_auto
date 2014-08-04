@@ -8,7 +8,10 @@ class MainBot < AbstractBot
 
 end  #end of class
 
-instance = MainBot.new("home")
-instance.buff_min_goldsmelters
+instance = MainBot.new("work")
+
+instance.composite_action
+instance.produce_units
+
 
 

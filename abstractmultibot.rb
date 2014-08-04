@@ -104,5 +104,44 @@ class AbstractMultibot < AbstractBot
     end
     buff_all_toolmakers
   end
+  
+  	def composite_action
+		@variant = ARGV[0]
+		ARGV[1..-1].each do |a|
+			if a == "goldmine"
+				buff_main_goldmines
+			elsif 	a == "gold"
+				buff_main_goldsmelters
+			elsif 	a == "gold_m"
+				buff_main_goldsmelters_min
+			elsif 	a == "coins"	
+				buff_main_coinmakers
+			elsif 	a == "coins_m"
+				buff_main_coinmakers_min	
+			elsif 	a == "towers"			
+				buff_main_goldtowers
+			elsif 	a == "ironmine"		
+				buff_main_ironmines
+			elsif 	a == "iron"		
+				buff_main_ironsmelters
+			elsif 	a == "ironsword"
+				buff_main_ironswords
+			elsif 	a == "steel"
+				buff_main_steelsmelters
+			elsif 	a == "steelsword"
+				buff_main_steelswords	
+			elsif 	a == "bronzesword"
+				buff_main_bronzeswords
+			elsif 	a == "bronze"
+				buff_main_copper_smelters
+			elsif 	a == "marmorfind"
+				handle_marmor_find	
+			elsif 	a == "ironfind"
+				handle_iron_find
+			elsif 	a == "goldfind"
+				handle_gold_find																			
+			end
+		end
+	end
 end#of class
 

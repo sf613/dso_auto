@@ -1,7 +1,3 @@
-def test
-	yield 5
-	puts "aaa"
-	yield 10
-end
-
-test{|i| puts i}
+puts ARGV[0]
+puts ARGV[1]
+puts ARGV[2]
