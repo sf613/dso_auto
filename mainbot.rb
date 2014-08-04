@@ -8,7 +8,7 @@ class MainBot < AbstractBot
 
 end  #end of class
 
-instance = MainBot.new("work")
+instance = MainBot.new(ARGV[0])
 
 instance.composite_action
 instance.produce_units

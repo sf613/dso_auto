@@ -33,6 +33,5 @@ class Multi2bot < AbstractMultiBot
 
 end
 
-instance = Multi2bot.new("work")
-instance.buff_main_goldmines
-instance.buff_main_goldsmelters_min
+instance = Multi2bot.new(ARGV[0])
+instance.composite_action

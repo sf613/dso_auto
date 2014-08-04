@@ -29,6 +29,6 @@ class Multi3bot < AbstractMultiBot
 
 end
 
-instance = Multi3bot.new("work")
+instance = Multi3bot.new(ARGV[0])
 #instance.rebuild_fields
-instance.buff_main_goldtowers
+instance.composite_action

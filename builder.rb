@@ -27,7 +27,8 @@ class BobTheBuilder
 		if @variant == "home"
 			@star_menu_region = Region.new(480,270,400,260)
 			@csv_path = @image_path+"/xyHome/#{user}"
-		#  @building_menu_coords =
+      @building_menu_coords = [440,589]
+      @building_window = Region.new(269,153,340,380)
 		elsif @variant == "work"
 			@star_menu_region = Region.new(760,560,400,280)
 			@csv_path = @image_path+"/xyWork/#{user}"

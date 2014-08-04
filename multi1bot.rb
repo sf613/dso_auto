@@ -29,7 +29,5 @@ class Multi1bot < AbstractMultiBot
 	end
 end#of class
 
-instance = Multi1bot.new("home")
-instance.buff_main_goldsmelters_min
-instance.buff_main_goldmines
-instance.buff_main_goldtowers
+instance = Multi1bot.new(ARGV[0])
+instance.composite_action

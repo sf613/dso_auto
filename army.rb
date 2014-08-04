@@ -25,13 +25,16 @@ class Army
 		#@action_count = action_count
 		@variant = variant
 		if @variant == "home"
-			@barracks_menu_region = Region.new(480,270,400,260)
+			@barracks_menu_region = Region.new(393,189,600,430)
+      @unit_menu_region = Region.new(565,300,130,130)
+      @close_barracks = Region.new(939,193,30,30)
+      @slider = Location.new(932,429)
 			@csv_path = @image_path+"/xyHome/#{user}"
-		#  @building_menu_coords =
 		elsif @variant == "work"
 			@barracks_menu_region = Region.new(672,346,600,430)
 			@unit_menu_region = Region.new(840,456,130,130)
-			@close_barracks = Region.new(1200,345,3,3)
+			@close_barracks = Region.new(1200,345,30,30)
+			@slider = Location.new(1211,584)
 			@csv_path = @image_path+"/xyWork/#{user}"
 		end
 	end
@@ -53,7 +56,8 @@ class Army
 			puts "total to build : #{number}, number of cycles : #{repetitions}"
 			@screen.click(@unit_menu_region.find("#{self.image_path}/#{type}.png"))
 			sleep(1)
-			@screen.click(Location.new(1211,584))
+			@screen.click(@slider)
+			sleep(1)
 			@screen.click(@screen.find("#{self.image_path}/ok_button.png"))
 			sleep(1)
 			repetitions -=1
