@@ -1,9 +1,7 @@
-class Test
-  def initialize
-    @dupa = "dupaaaa"
-   end
-   
-   def print
-     puts @dupa
-   end
-end     
+def test
+	yield 5
+	puts "aaa"
+	yield 10
+end
+
+test{|i| puts i}
