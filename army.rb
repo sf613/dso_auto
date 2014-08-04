@@ -31,13 +31,14 @@ class Army
 		elsif @variant == "work"
 			@barracks_menu_region = Region.new(672,346,600,430)
 			@unit_menu_region = Region.new(840,456,130,130)
+			@close_barracks = Region.new(1200,345,3,3)
 			@csv_path = @image_path+"/xyWork/#{user}"
 		end
 	end
 
 	def open_menu
 		begin
-			@screen.click(Region.new(1200,345,3,3).find("#{self.image_path}/close_window.png"))
+			@screen.click(@close_barracks.find("#{self.image_path}/close_window.png"))
 			puts "before opening the menu : "
 		rescue => e
 			puts e
@@ -58,7 +59,7 @@ class Army
 			repetitions -=1
 		end
 		begin
-			@screen.click(Region.new(1200,345,3,3).find("#{self.image_path}/close_window.png"))
+			@screen.click(@close_barracks.find("#{self.image_path}/close_window.png"))
 		rescue => e
 			puts e
 		end
