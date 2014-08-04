@@ -3,7 +3,6 @@ require 'abstractbot'
 class AbstractMultibot < AbstractBot
   attr_accessor :sikuli_executor,:screen, :sikuli, :image_path,:variant
   def initialize(variant)
-    end
 
   end
 
