@@ -221,4 +221,10 @@ class AbstractBot
 			@army.build_units(@unit_type, @number)
 		end
 	end
+	def clean_messages
+		@variant = ARGV[0]
+		if ARGV[1] == "messages"
+			@sikuli_executor.accept_mail_rewards
+		end
+	end
 end

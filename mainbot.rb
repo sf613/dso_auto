@@ -12,6 +12,7 @@ instance = MainBot.new(ARGV[0])
 
 instance.composite_action
 instance.produce_units
+instance.clean_messages
 
 
 
