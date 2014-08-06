@@ -195,6 +195,7 @@ class Executor
       end
       if @user != "main"
         @screen.click(@screen.find("#{self.image_path}/back_home.png"))
+        @screen.wait_vanish("#{self.image_path}/map_loading.png",15)
       end
     rescue => e
       puts e

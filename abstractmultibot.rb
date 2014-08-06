@@ -146,4 +146,3 @@ class AbstractMultibot < AbstractBot
 		end
 	end
 end#of class
-

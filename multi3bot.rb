@@ -1,6 +1,6 @@
 require 'abstractmultibot'
 
-class Multi3bot < AbstractMultiBot
+class Multi3bot < AbstractMultibot
 	attr_accessor :sikuli_executor,:screen, :sikuli, :image_path,:variant
 	def initialize(variant)
 		@browser = "Opera"
@@ -17,18 +17,19 @@ class Multi3bot < AbstractMultiBot
 			@star_menu_region = Region.new(760,560,400,280)
 			@csv_path = @image_path+"/xyWork/multi3"
 			#login
-			@sikuli.switch_app("C:\\Program Files (x86)\\Opera\\launcher")
-			@screen.wait("#{@image_path}/a_m3.png",20)
-			@screen.click(@screen.find("#{@image_path}/b_play.png"))
+			@sikuli.switch_app("Siedler")
 			sleep(10)
-			@screen.wait("#{@image_path}/a_m3.png",20)
+			@screen.wait(Pattern.new("#{@image_path}/a_m3.png").similar(0.8),20)
+			@screen.click(@screen.find(Pattern.new("#{@image_path}/b_play.png").similar(0.85)))
+			sleep(10)
+			@screen.wait(Pattern.new("#{@image_path}/a_m3.png").similar(0.8),20)
 			@screen.click(@screen.find("#{@image_path}/ok_button.png"))
 		end
 
 	end
 
 end
-
+ 
 instance = Multi3bot.new(ARGV[0])
 #instance.rebuild_fields
 instance.composite_action

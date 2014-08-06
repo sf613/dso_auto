@@ -25,6 +25,9 @@ class AbstractBot
 			@csv_path = @image_path+"/xyWork/main"
 		end
 		@sikuli.switch_app("Siedler")
+		
+		# sikuli has problems switching apps based on their name if there are more than 2 browser windows opened. The workaround is to change active window of the main browser to some page other than DSO and manually open the slave browser, then use script to switch to it based on active window title, not the browser name.
+		#
 	end
 
 	def switch_to_main

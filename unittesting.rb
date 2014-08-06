@@ -275,7 +275,7 @@ class UnitTesting
 		begin
     @sikuli.switch_app("Siedler")
     sleep(1)
-	@screen.type(Location.new(600,300), "b")
+    @screen.mouse_move(@screen.find("#{self.image_path}/b_play.png"))
 	 rescue => e
 	 	puts e
 	 end
