@@ -33,13 +33,13 @@ class AbstractMultibot < AbstractBot
 		buff_all_bronzeswords
 	end
 
-	def buff_main_copper_smelters
+	def buff_main_bronzesmelters
 		if @variant == "home"
 			@csv_path = @image_path+"/xyHome/main"
 		elsif @variant == "work"
 			@csv_path = @image_path+"/xyWork/main"
 		end
-		buff_all_copper_smelters
+		buff_all_bronzesmelters
 	end
 
 	def buff_main_goldtowers
@@ -104,6 +104,42 @@ class AbstractMultibot < AbstractBot
 		end
 		buff_all_toolmakers
 	end
+	
+		def buff_main_ironsmelters
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
+		buff_all_ironsmelters
+	end
+	
+		def buff_main_ironswords
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
+		buff_all_ironswords
+	end
+	
+			def buff_main_steelsmelters
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
+		buff_all_steelsmelters
+	end
+	
+		def buff_main_steelswords
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
+		buff_all_steelswords
+	end
 
 	def composite_action
 		@variant = ARGV[0]
@@ -111,30 +147,30 @@ class AbstractMultibot < AbstractBot
 			ARGV[2..-1].each do |a|
 				if a == "goldmine"
 					buff_main_goldmines
-				elsif 	a == "gold"
+				elsif 	a == "goldmines"
 					buff_main_goldsmelters
-				elsif 	a == "gold_m"
+				elsif 	a == "goldsmelters_m"
 					buff_main_goldsmelters_min
 				elsif 	a == "coins"
 					buff_main_coinmakers
 				elsif 	a == "coins_m"
 					buff_main_coinmakers_min
-				elsif 	a == "towers"
+				elsif 	a == "goldtowers"
 					buff_main_goldtowers
-				elsif 	a == "ironmine"
+				elsif 	a == "ironmines"
 					buff_main_ironmines
-				elsif 	a == "iron"
+				elsif 	a == "ironsmelters"
 					buff_main_ironsmelters
-				elsif 	a == "ironsword"
+				elsif 	a == "ironswords"
 					buff_main_ironswords
-				elsif 	a == "steel"
+				elsif 	a == "steelsmelters"
 					buff_main_steelsmelters
-				elsif 	a == "steelsword"
+				elsif 	a == "steelswords"
 					buff_main_steelswords
-				elsif 	a == "bronzesword"
+				elsif 	a == "bronzeswords"
 					buff_main_bronzeswords
-				elsif 	a == "bronze"
-					buff_main_copper_smelters
+				elsif 	a == "bronzesmelters"
+					buff_main_bronzesmelters
 				elsif 	a == "marmorfind"
 					handle_marmor_find
 				elsif 	a == "ironfind"

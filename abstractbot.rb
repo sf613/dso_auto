@@ -84,7 +84,7 @@ class AbstractBot
 		@sikuli_executor.buff_building_group(coords)
 	end
 
-	def buff_all_copper_smelters
+	def buff_all_bronzesmelters
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/copper_smelters.csv")
 		if @variant == "home"
@@ -146,6 +146,18 @@ class AbstractBot
 		coords = read_coords_from_file("#{@csv_path}/toolmakers.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
+	
+		def buff_all_ironsmelters
+		switch_to_main
+		coords = read_coords_from_file("#{@csv_path}/ironsmelters.csv")
+		@sikuli_executor.buff_building_group(coords)
+	end
+	
+		def buff_all_ironswords
+		switch_to_main
+		coords = read_coords_from_file("#{@csv_path}/ironswords.csv")
+		@sikuli_executor.buff_building_group(coords)
+	end
 
 	def buff_all_ironmines
 		switch_to_main
@@ -176,32 +188,32 @@ class AbstractBot
 		@variant = ARGV[0]
 		if ARGV[1] == "buffs"
 			ARGV[2..-1].each do |a|
-				if a == "goldmine"
+				if a == "goldmines"
 					buff_all_goldmines
-				elsif 	a == "gold"
+				elsif 	a == "goldsmelters"
 					buff_all_goldsmelters
-				elsif 	a == "gold_m"
+				elsif 	a == "goldsmelters_m"
 					buff_min_goldsmelters
 				elsif 	a == "coins"
 					buff_all_coinmakers
 				elsif 	a == "coins_m"
 					buff_min_coinmakers
-				elsif 	a == "towers"
+				elsif 	a == "goldtowers"
 					buff_all_goldtowers
-				elsif 	a == "ironmine"
+				elsif 	a == "ironmines"
 					buff_all_ironmines
-				elsif 	a == "iron"
+				elsif 	a == "ironsmelters"
 					buff_all_ironsmelters
-				elsif 	a == "ironsword"
+				elsif 	a == "ironswords"
 					buff_all_ironswords
-				elsif 	a == "steel"
+				elsif 	a == "steelsmelters"
 					buff_all_steelsmelters
-				elsif 	a == "steelsword"
+				elsif 	a == "steelswords"
 					buff_all_steelswords
-				elsif 	a == "bronzesword"
+				elsif 	a == "bronzeswords"
 					buff_all_bronzeswords
-				elsif 	a == "bronze"
-					buff_all_copper_smelters
+				elsif 	a == "bronzesmelters"
+					buff_all_bronzesmelters
 				elsif 	a == "marmorfind"
 					handle_marmor_find
 				elsif 	a == "ironfind"
@@ -221,6 +233,7 @@ class AbstractBot
 			puts "browser : #{@browser}, class : #{@browser.class}"
 			@number = ARGV[3]
 			@sikuli.switch_app(@browser)
+			sleep(2)
 			@army.build_units(@unit_type, @number)
 		end
 	end

@@ -32,7 +32,7 @@ class Army
 			@csv_path = @image_path+"/xyHome/#{user}"
 		elsif @variant == "work"
 			@barracks_menu_region = Region.new(672,346,600,430)
-			@unit_menu_region = Region.new(840,456,130,130)
+			@unit_menu_region = Region.new(830,446,150,150)
 			@close_barracks = Region.new(1200,345,30,30)
 			@slider = Location.new(1211,584)
 			@csv_path = @image_path+"/xyWork/#{user}"
