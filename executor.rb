@@ -138,16 +138,16 @@ class Executor
       @unique_sector_numbers.uniq!
       @unique_sector_numbers.each do |sector|
         Convenience.jump_to_sector(sector, @image_path, @screen)
-        
+
         puts "#{sector.class}, #{scroll.class} , #{type.class}"
         #perform scrolling the view if necessary
 
         if sector == 2 && scroll && type == "goldsmelters"
           puts "sector = 2, scrolling to view the smelters "
           Convenience.drag_to_location(Location.new(608,184), Location.new(608,378), @screen)
-          
+
         end
-        if sector == 1 && scroll && type == "copper_smelters"
+        if sector == 1 && scroll && type == "bronzesmelters"
           puts "sector = 1, scrolling to view the smelters "
           Convenience.drag_to_location(Location.new(618,390), Location.new(402,543), @screen)
         end
@@ -158,7 +158,17 @@ class Executor
         if sector == 5 && scroll && type == "ironmines"
           puts "sector = 5, scrolling to view the smelters "
           Convenience.drag_to_location(Location.new(594,283), Location.new(1047,553), @screen)
-        end                      
+        end
+
+        if sector == 6 && scroll && type == "ironsmelters"
+          puts "sector = 6, scrolling to view the smelters "
+          Convenience.drag_to_location(Location.new(499,290), Location.new(790,498), @screen)
+        end
+        if sector == 6 && scroll && type == "ironswords"
+          puts "sector = 6, scrolling to view the smelters "
+          Convenience.drag_to_location(Location.new(499,290), Location.new(790,498), @screen)
+        end
+
         star_menu
         if object_exists?("#{self.image_path}/basket.png", 0.8) != 1
           @screen.click(@screen.find("#{self.image_path}/l_specialisten.png"))  #soft reset

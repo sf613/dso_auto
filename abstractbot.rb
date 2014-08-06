@@ -86,9 +86,9 @@ class AbstractBot
 
 	def buff_all_bronzesmelters
 		switch_to_main
-		coords = read_coords_from_file("#{@csv_path}/copper_smelters.csv")
+		coords = read_coords_from_file("#{@csv_path}/bronzesmelters.csv")
 		if @variant == "home"
-			@sikuli_executor.buff_building_group(coords, "yes", "copper_smelters")
+			@sikuli_executor.buff_building_group(coords, "yes", "bronzesmelters")
 		else
 		@sikuli_executor.buff_building_group(coords)
 		end
