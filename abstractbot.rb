@@ -150,13 +150,21 @@ class AbstractBot
 		def buff_all_ironsmelters
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/ironsmelters.csv")
-		@sikuli_executor.buff_building_group(coords)
+    if @variant == "home"
+      @sikuli_executor.buff_building_group(coords, "yes", "ironsmelters")
+    else
+    @sikuli_executor.buff_building_group(coords)
+    end
 	end
 	
 		def buff_all_ironswords
 		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/ironswords.csv")
-		@sikuli_executor.buff_building_group(coords)
+    if @variant == "home"
+      @sikuli_executor.buff_building_group(coords, "yes", "ironswords")
+    else
+    @sikuli_executor.buff_building_group(coords)
+    end
 	end
 
 	def buff_all_ironmines
