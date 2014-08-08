@@ -25,9 +25,9 @@ class AbstractBot
 			@csv_path = @image_path+"/xyWork/main"
 		end
 		@sikuli.switch_app("Siedler")
-		
-		# sikuli has problems switching apps based on their name if there are more than 2 browser windows opened. The workaround is to change active window of the main browser to some page other than DSO and manually open the slave browser, then use script to switch to it based on active window title, not the browser name.
-		#
+
+	# sikuli has problems switching apps based on their name if there are more than 2 browser windows opened. The workaround is to change active window of the main browser to some page other than DSO and manually open the slave browser, then use script to switch to it based on active window title, not the browser name.
+	#
 	end
 
 	def switch_to_main
@@ -63,14 +63,12 @@ class AbstractBot
 	#  BUFFING
 	#
 	def buff_all_bakeries
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/bakeries.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
 	def buff_all_bows
 		begin
-			switch_to_main
 			coords = read_coords_from_file("#{@csv_path}/bows.csv")
 			@sikuli_executor.buff_building_group(coords)
 		rescue => e
@@ -79,13 +77,11 @@ class AbstractBot
 	end
 
 	def buff_all_bronzeswords
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/bronzeswords.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
 	def buff_all_bronzesmelters
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/bronzesmelters.csv")
 		if @variant == "home"
 			@sikuli_executor.buff_building_group(coords, "yes", "bronzesmelters")
@@ -95,7 +91,6 @@ class AbstractBot
 	end
 
 	def buff_all_goldsmelters
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldsmelters.csv")
 		if @variant == "home"
 			puts "scroll needed"
@@ -106,7 +101,6 @@ class AbstractBot
 	end
 
 	def buff_min_goldsmelters
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldsmelters_min.csv")
 		if @variant == "home"
 			puts "scroll needed"
@@ -118,57 +112,49 @@ class AbstractBot
 	end
 
 	def buff_all_coinmakers
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/coins.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
 	def buff_min_coinmakers
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/coins_min.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
 	def buff_all_goldmines
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldmines.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
 	def buff_all_goldtowers
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/goldtowers.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
 
 	def buff_all_toolmakers
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/toolmakers.csv")
 		@sikuli_executor.buff_building_group(coords)
 	end
-	
-		def buff_all_ironsmelters
-		switch_to_main
+
+	def buff_all_ironsmelters
 		coords = read_coords_from_file("#{@csv_path}/ironsmelters.csv")
-    if @variant == "home"
-      @sikuli_executor.buff_building_group(coords, "yes", "ironsmelters")
-    else
-    @sikuli_executor.buff_building_group(coords)
-    end
+		if @variant == "home"
+			@sikuli_executor.buff_building_group(coords, "yes", "ironsmelters")
+		else
+		@sikuli_executor.buff_building_group(coords)
+		end
 	end
-	
-		def buff_all_ironswords
-		switch_to_main
+
+	def buff_all_ironswords
 		coords = read_coords_from_file("#{@csv_path}/ironswords.csv")
-    if @variant == "home"
-      @sikuli_executor.buff_building_group(coords, "yes", "ironswords")
-    else
-    @sikuli_executor.buff_building_group(coords)
-    end
+		if @variant == "home"
+			@sikuli_executor.buff_building_group(coords, "yes", "ironswords")
+		else
+		@sikuli_executor.buff_building_group(coords)
+		end
 	end
 
 	def buff_all_ironmines
-		switch_to_main
 		coords = read_coords_from_file("#{@csv_path}/ironmines.csv")
 		if @variant == "home"
 			@sikuli_executor.buff_building_group(coords, "yes", "ironmines")
@@ -195,6 +181,7 @@ class AbstractBot
 	def composite_action
 		@variant = ARGV[0]
 		if ARGV[1] == "buffs"
+			switch_to_main
 			ARGV[2..-1].each do |a|
 				if a == "goldmines"
 					buff_all_goldmines
@@ -230,6 +217,10 @@ class AbstractBot
 					handle_gold_find
 				end
 			end
+			if @user != "main"
+				@screen.click(@screen.find("#{self.image_path}/back_home.png"))
+				@screen.wait_vanish("#{self.image_path}/map_loading.png",15)
+			end
 		end
 	end
 
@@ -242,13 +233,14 @@ class AbstractBot
 			@number = ARGV[3]
 			@sikuli.switch_app(@browser)
 			sleep(2)
-			@army.build_units(@unit_type, @number)
+		@army.build_units(@unit_type, @number)
 		end
 	end
+
 	def clean_messages
 		@variant = ARGV[0]
 		if ARGV[1] == "messages"
-			@sikuli_executor.accept_mail_rewards
+		@sikuli_executor.accept_mail_rewards
 		end
 	end
 end
