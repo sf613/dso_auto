@@ -123,6 +123,15 @@ class AbstractMultibot < AbstractBot
 		buff_all_ironswords
 	end
 	
+			def buff_main_ironmines
+		if @variant == "home"
+			@csv_path = @image_path+"/xyHome/main"
+		elsif @variant == "work"
+			@csv_path = @image_path+"/xyWork/main"
+		end
+		buff_all_ironmines
+	end
+	
 			def buff_main_steelsmelters
 		if @variant == "home"
 			@csv_path = @image_path+"/xyHome/main"
@@ -144,10 +153,11 @@ class AbstractMultibot < AbstractBot
 	def composite_action
 		@variant = ARGV[0]
 		if ARGV[1] == "buffs"
+			switch_to_main
 			ARGV[2..-1].each do |a|
-				if a == "goldmine"
+				if a == "goldmines"
 					buff_main_goldmines
-				elsif 	a == "goldmines"
+				elsif 	a == "goldsmelters"
 					buff_main_goldsmelters
 				elsif 	a == "goldsmelters_m"
 					buff_main_goldsmelters_min
@@ -180,5 +190,9 @@ class AbstractMultibot < AbstractBot
 				end
 			end
 		end
+			if @user != "main"
+				@screen.click(@screen.find("#{self.image_path}/back_home.png"))
+				@screen.wait_vanish("#{self.image_path}/map_loading.png",15)
+			end
 	end
 end#of class

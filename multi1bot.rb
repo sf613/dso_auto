@@ -1,6 +1,6 @@
 require 'abstractmultibot'
 
-class Multi1bot < AbstractMultiBot
+class Multi1bot < AbstractMultibot
 	attr_accessor :sikuli_executor,:screen, :sikuli, :image_path,:variant
 	def initialize(variant)
 		@browser = "FireFox"
