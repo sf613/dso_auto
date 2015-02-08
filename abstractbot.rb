@@ -5,6 +5,7 @@ require 'builder'
 require 'convenience'
 require 'tolerances'
 require 'army'
+require "selenium-webdriver"
 
 class AbstractBot
 	attr_accessor :sikuli_executor,:screen, :sikuli, :image_path,:variant
@@ -177,7 +178,7 @@ class AbstractBot
 	def rebuild_fields
 		BobTheBuilder.new("work",@user,@browser).replenish_fields
 	end
-
+=begin
 	def composite_action
 		@variant = ARGV[0]
 		if ARGV[1] == "buffs"
@@ -223,8 +224,54 @@ class AbstractBot
 			end
 		end
 	end
+=end
+def composite_action(*args)
+    @variant = args[0]
+    if args[1] == "buffs"
+      switch_to_main
+      args[2..-1].each do |a|
+        if a == "goldmines"
+          buff_all_goldmines
+        elsif   a == "goldsmelters"
+          buff_all_goldsmelters
+        elsif   a == "goldsmelters_m"
+          buff_min_goldsmelters
+        elsif   a == "coins"
+          buff_all_coinmakers
+        elsif   a == "coins_m"
+          buff_min_coinmakers
+        elsif   a == "goldtowers"
+          buff_all_goldtowers
+        elsif   a == "ironmines"
+          buff_all_ironmines
+        elsif   a == "ironsmelters"
+          buff_all_ironsmelters
+        elsif   a == "ironswords"
+          buff_all_ironswords
+        elsif   a == "steelsmelters"
+          buff_all_steelsmelters
+        elsif   a == "steelswords"
+          buff_all_steelswords
+        elsif   a == "bronzeswords"
+          buff_all_bronzeswords
+        elsif   a == "bronzesmelters"
+          buff_all_bronzesmelters
+        elsif   a == "marmorfind"
+          handle_marmor_find
+        elsif   a == "ironfind"
+          handle_iron_find
+        elsif   a == "goldfind"
+          handle_gold_find
+        end
+      end
+      if @user != "main"
+        @screen.click(@screen.find("#{self.image_path}/back_home.png"))
+        @screen.wait_vanish("#{self.image_path}/map_loading.png",15)
+      end
+    end
+  end
 
-	def produce_units
+=begin	def produce_units
 		@variant = ARGV[0]
 		puts "arguments : #{ARGV}"
 		if ARGV[1] == "units"
@@ -236,11 +283,28 @@ class AbstractBot
 		@army.build_units(@unit_type, @number)
 		end
 	end
-
-	def clean_messages
+=end	
+def produce_units(*args)
+    @variant = args[0]
+    if args[1] == "units"
+      @unit_type = args[2]
+      @number = args[3]
+      @sikuli.switch_app(@browser)
+      sleep(2)
+    @army.build_units(@unit_type, @number)
+    end
+  end
+=begin	def clean_messages
 		@variant = ARGV[0]
 		if ARGV[1] == "messages"
 		@sikuli_executor.accept_mail_rewards
 		end
 	end
+=end
+  def clean_messages(*args)
+    @variant = args[0]
+    if args[1] == "messages"
+    @sikuli_executor.accept_mail_rewards
+    end
+  end
 end
