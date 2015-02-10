@@ -225,7 +225,7 @@ class AbstractBot
 		end
 	end
 =end
-def composite_action(*args)
+  def composite_action(*args)
     @variant = args[0]
     if args[1] == "buffs"
       switch_to_main
@@ -284,7 +284,7 @@ def composite_action(*args)
 		end
 	end
 =end	
-def produce_units(*args)
+  def produce_units(*args)
     @variant = args[0]
     if args[1] == "units"
       @unit_type = args[2]

@@ -1,9 +1,5 @@
-require 'testclass1'
-
-class Test2 < Test
-  def initialize
-    @dupa = "1234"
-  end
+case a
+when 1
+when 2
 end
 
-Test2.new.print
